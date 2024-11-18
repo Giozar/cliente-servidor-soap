@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora SOAP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Calculadora SOAP</h1>
+    <form id="calcForm">
+        <label for="operation">Seleccione la operación:</label>
+        <select id="operation" name="operation" required>
+            <option value="Add">Suma</option>
+            <option value="Pot">Potencia</option>
+            <option value="Mult">Multiplicación</option>
+            <option value="Div">División</option>
+        </select>
+        <br><br>
+        <label for="intA">Ingrese intA:</label>
+        <input type="number" id="intA" name="intA" required>
+        <br><br>
+        <label for="intB">Ingrese intB:</label>
+        <input type="number" id="intB" name="intB" required>
+        <br><br>
+        <button type="submit">Calcular</button>
+    </form>
+    <div id="resultados">
+        <h2>Resultado:</h2>
+        <pre id="output"></pre>
+    </div>
+    <script>
+        document.getElementById('calcForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const intA = document.getElementById('intA').value;
+            const intB = document.getElementById('intB').value;
+            const operation = document.getElementById('operation').value;
+
+            try {
+                const response = await fetch('/calculadora', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ intA, intB, operation })
+                });
+
+                const result = await response.json();
+                document.getElementById('output').textContent = result.message;
+            } catch (error) {
+                document.getElementById('output').textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
